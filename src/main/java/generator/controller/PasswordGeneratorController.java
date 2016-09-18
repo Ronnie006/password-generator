@@ -1,10 +1,11 @@
 package generator.controller;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,22 +16,50 @@ import generator.service.PasswordGeneratorService;
 @RestController
 public class PasswordGeneratorController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(PasswordGeneratorController.class);
+	
 	@Autowired
 	PasswordGeneratorService passwordGeneratorService; 
 	
-	@RequestMapping("/")
-    String index(Model model) {
-        model.addAttribute("now", LocalDateTime.now());
-        return "index";
-    }
-	
-	@RequestMapping(value="/password", method=RequestMethod.POST)
-	public String getPassword(@RequestBody Map<String, Object> request){
+	@RequestMapping(value="/password",method=RequestMethod.POST)
+    public Map<String,Object> index(@RequestBody Map<String,Object> request) {
 		
-		boolean withSpecialCharacters = Boolean.parseBoolean(request.get("withSpecialCharacters").toString());
-		String specialCharacters = request.get("specialCharacters").toString();
+		boolean withSc = Boolean.parseBoolean(request.get("withSC").toString());
+		String specialChar = "";
+		if(!(request.get("specialCharacter")==null)){
+			specialChar = request.get("specialCharacter").toString();
+		}
 		
-		return passwordGeneratorService.generatePassword(withSpecialCharacters,specialCharacters);
-	}
-	
+		Map<String,Object> map = new HashMap<String,Object>();
+		String password = passwordGeneratorService.getPassword(withSc,specialChar);
+		map.put("password", password);
+		
+		logger.info(password);
+		
+        return map;
+    }	
 }
+
+
+
+//@Controller
+//public class PasswordGeneratorController {
+//	
+//	@Autowired
+//	PasswordGeneratorService passwordGeneratorService; 
+//	
+//	@RequestMapping(value="/",method=RequestMethod.GET)
+//    String index(Model model) {
+//		String password = passwordGeneratorService.getPassword();
+//		model.addAttribute("password",password);
+//        return "index";
+//    }
+//	
+//	@RequestMapping(value="/",method=RequestMethod.POST)
+//    String submit(@ModelAttribute SpecialCharacter charac) {
+//        return "index";
+//    }
+//	
+//	
+//	
+//}
