@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="passgen">
+<head>
+<meta charset="ISO-8859-1">
+<title>Password Generator</title>
+
+<link rel="stylesheet" href="/css/core.css">
+
+<script type="text/javascript" src="/vendor/jquery.min.js"></script>
+<script type="text/javascript" src="/vendor/angular.min.js"></script>
+<script type="text/javascript" src="/js/app.js"></script>
+</head>
+<body ng-controller="passgenController">
+
+<div class="login-form">
+	<center><strong>{{password}}</strong></center><br><br>
+		<div class="form-group">
+			
+			<center>
+				<select ng-model="selectedOption">
+					<option ng-repeat="x in options">{{x}}</option>
+				</select><br><br>
+			</center>
+			
+			<center>
+				<div ng-show="selectedOption=='With special character'">
+					<input type="text" ng-model="specialChar" placeholder="Ex. @#$%"/>
+				</div>
+			</center><br>
+			<button ng-click="generatePassword()" class="log-btn">Generate
+				Password</button>
+		</div>
+	</div>
+
+
+
+</body>
+</html>
